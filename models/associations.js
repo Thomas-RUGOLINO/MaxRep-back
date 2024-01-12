@@ -29,7 +29,7 @@ Sport.belongsTo(Category,{
 
 // User <--------> Sport (Many-to-Many)
 
-User.hasMany(Sport,{
+User.belongsToMany(Sport,{
     as: "sports",
     through:"user_has_sport",
     foreignKey:"user_id",
@@ -37,7 +37,7 @@ User.hasMany(Sport,{
 
 });
 
-Sport.hasMany(User, {
+Sport.belongsToMany(User, {
     as : "users",
     through:"user_has_sport",
     foreignKey:"sport_id",

@@ -1,4 +1,4 @@
-// router/main.router
+// router/index.router
 const { Router } = require("express");
 
 const userRouter = require("./user.router");

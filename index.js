@@ -9,8 +9,8 @@ const app = express();
 // Body parser to provide res in JSON format
 app.use(express.json());
 
-//Use router
-const router = require('./router/main.router');
+//Use router TO point on index.js in router
+const router = require('./router');
 app.use('/api' , router);
 
 //server listening
