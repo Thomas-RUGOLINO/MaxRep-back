@@ -11,4 +11,7 @@ userRouter.get("/users", userController.getAllUsers);
 // Register a new User Endpoint
 userRouter.post("/register", userController.registerUser);
 
+//UserLogin Endpoint
+userRouter.post("/login", userController.loginUser);
+
 module.exports = userRouter;
