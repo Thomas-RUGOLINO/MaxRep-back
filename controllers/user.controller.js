@@ -1,5 +1,6 @@
 const emailValidator = require('email-validator');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const { User } = require("../models");
 
 async function getAllUsers(req, res) {
@@ -22,7 +23,7 @@ async function registerUser (req, res) {
     // == 2. User's inputs CONTROL ==
     if(!email || !password || !passwordConfirm || !lastname || !firstname || !birthDate || !gender) {
 
-        return res.status(400).json({ error: "All fields are mandatory / Tous les champs sont obligatoires !" });  
+        return res.status(400).json({ error: "All fields are required / Tous les champs sont obligatoires !" });  
     }
 
     if(!emailValidator.validate(email)){
@@ -62,7 +63,41 @@ async function registerUser (req, res) {
     res.status(201).json(createdUser); // On repond au client via un res.json
 
 }
+
+async function loginUser(req, res) {
+
+    const  { email, password } = req.body;
+
+    if(!email || !password){
+        return res.status(400).json({error : "All fields are required / Tous les champs sont obligatoires" });
+    }
+
+    if(!emailValidator.validate(email)){
+        return res.status(400).json({ error: "Invalid Authentication check your credentials ! / Autenthification invalide vérifiez vos informations" });
+    }
+
+
+    const user = await User.findOne({ where: {email} });
+
+    if(!user){
+        // ! Attention : lorsque l'on doit renvoyer à l'utilisateur une erreur, spécifiant que soit son email soit son mot de passe est invalide, le message le plus flou possible. C'est à dire que l'on ne renverra pas "email invalide" ou "mot de passe incorrect", mais "authentification invalide". Le but étant de laissé le moins de pistes possible pour un potentiel pirate.
+        return res.status(400).json({ error: "Invalid Authentication check your credentials ! / Autenthification invalide vérifiez vos informations" });
+    } else {
+        // comparer user.password (le mot de passe récupérer de la BDD) avec password (fourni par l'utilisateur dans le post)
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+        if(!isPasswordValid){
+            return res.status(400).json({ error: "Invalid Authentication check your credentials ! / Autenthification invalide vérifiez vos informations" });
+        }
+
+        const token = jwt.sign({id : user.id, firstname : user.fistname, lastname : user.lastname}, process.env.SECRET);
+        res.header('auth-token', token);
+        return res.status(200).json(token);
+    }
+}
+
+
 module.exports = {
     getAllUsers,
-    registerUser    
+    registerUser,
+    loginUser    
 };
