@@ -32,7 +32,7 @@ async function registerUser (req, res) {
     const existingUser = await User.findOne({ where: {email} });
 
     if (existingUser) {
-        // Si l'utilisateur existe déjà avec cet email
+        // if user already exists, return an error
         return res.status(400).json({ error: "Email already exists / L'email existe déjà !" });
     }
 
@@ -40,26 +40,6 @@ async function registerUser (req, res) {
         return res.status(400).json({ error:"Les mots de passe ne correspondent pas / Passwords do not match !" });
     }
 
-    function convertDateToDBFormat(dateString) {
-        // Séparation des composants de la date
-        const parts = dateString.split('/');
-        const day = parts[0];
-        const month = parts[1];
-        const year = parts[2];
-    
-        // Recomposition dans le format YYYY-MM-DD
-        const formattedDate = `${year}-${month}-${day}`;
-    
-        // Conversion en objet Date
-        const dateObject = new Date(formattedDate);
-    
-        // Formatage pour la base de données
-        return dateObject.toISOString().split('T')[0];
-    }
-
-    //const inputDate = "01/01/2024";
-    const dbFormattedDate = convertDateToDBFormat(birthDate);
-    //console.log(dbFormattedDate); // Affiche "2024-01-01"
     
     // encrypt the password
     const salt = await bcrypt.genSalt(10); // salt add a unique value to the password to increase the encryption
@@ -74,7 +54,7 @@ async function registerUser (req, res) {
         password: hashPassword,
         firstname,
         lastname,
-        birth_date: dbFormattedDate,
+        birth_date: birthDate,
         gender,
     });
 
