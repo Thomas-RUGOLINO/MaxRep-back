@@ -29,6 +29,13 @@ async function registerUser (req, res) {
         return res.status(400).json({ error: "Invalid email / Email invalide !" });
     }
 
+    const existingUser = await User.findOne({ where: {email} });
+
+    if (existingUser) {
+        // Si l'utilisateur existe déjà avec cet email
+        return res.status(400).json({ error: "Email already exists / L'email existe déjà !" });
+    }
+
     if(passwordConfirm !== password){
         return res.status(400).json({ error:"Les mots de passe ne correspondent pas / Passwords do not match !" });
     }
