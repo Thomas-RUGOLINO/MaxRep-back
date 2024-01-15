@@ -17,5 +17,11 @@ async function getProfile(req, res) {
     res.status(200).json(user);
 }
 
+async function updateProfile(req, res) {
+    const { id } = req.params;
+
+    
+}
+
 module.exports = {
     getProfile};

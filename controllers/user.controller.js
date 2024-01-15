@@ -93,7 +93,7 @@ async function loginUser(req, res) {
             return res.status(400).json({ error: "Invalid Authentication check your credentials ! / Autenthification invalide vérifiez vos informations" });
         }
         // If the password sent is valid we generate the token and send it with the server's response in the header
-        const token = jwt.sign({id : user.id, firstname : user.fistname, lastname : user.lastname}, process.env.SECRET);
+        const token = jwt.sign({id : user.id, firstname : user.firstname, lastname : user.lastname}, process.env.SECRET);
         res.header('auth-token', token);
         return res.status(200).json(token);
     }
