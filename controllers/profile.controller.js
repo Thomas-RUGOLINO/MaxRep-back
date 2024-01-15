@@ -24,4 +24,6 @@ async function updateProfile(req, res) {
 }
 
 module.exports = {
-    getProfile};
+    getProfile,
+    updateProfile
+};
