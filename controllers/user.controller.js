@@ -100,7 +100,7 @@ async function loginUser(req, res) {
 }
 
 
-module.exports = {
+module.exports = { 
     getAllUsers,
     registerUser,
     loginUser    
