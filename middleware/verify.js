@@ -2,11 +2,11 @@ const jwt = require('jsonwebtoken');
 
 const verify = (req, res, next) => {
     // Récupère la valeur de l'en-tête 'Authorization'
-    const authHeader = req.header('Authorization');
+    const authHeader = req.header("Authorization");
 
     // Vérifie si l'en-tête 'Authorization' est présent
     if (!authHeader) {
-        return res.status(401).json({error : 'Access denied. Missing Authorization header.'});
+        return res.status(401).json({error : "Unauthorized Access / Vous n'avez pas les droits d'accès à cette ressource"});
     }
 
     try {
@@ -22,7 +22,7 @@ const verify = (req, res, next) => {
         // Appelle le middleware suivant
         next();
     } catch (err) {
-        res.status(401).json({ error: 'Invalid token' });
+        res.status(401).json({ error: "Unauthorized Access / Vous n'avez pas les droits d'accès à cette ressource" });
     }
 };
 
