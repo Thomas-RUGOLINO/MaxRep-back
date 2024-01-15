@@ -58,7 +58,7 @@ async function registerUser (req, res) {
         birth_date: birthDate,
         gender,
     });
-
+    console.log(createdUser);
     // == 4. Réponse au client ==
     res.status(201).json({message : "User created successfully !"}); // On repond au client via un res.json
 
