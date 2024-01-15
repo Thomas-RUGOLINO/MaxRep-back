@@ -9,10 +9,13 @@ const profileRouter = Router();
 // Get user's infos by user ID
 profileRouter.get("/profile/:id", verify, profileController.getProfile);
 
-/* // Update user's infos by ID
-profileRouter.patch("/profile/:id", profileController.updateProfile);
+// Update user's infos by ID
+profileRouter.patch("/profile/:id", verify, profileController.updateProfile);
+
+// Add Sport by user
+profileRouter.post("/profile/sport/:id", verify, profileController.addSportToUser);
 
 // Delete user by ID
-profileRouter.delete("/profile/:id", profileController.deleteProfile); */
+//profileRouter.delete("/profile/:id", profileController.deleteProfile); */
 
 module.exports = profileRouter;
