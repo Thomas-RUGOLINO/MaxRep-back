@@ -60,7 +60,7 @@ async function registerUser (req, res) {
     });
 
     // == 4. Réponse au client ==
-    res.status(201).json(createdUser); // On repond au client via un res.json
+    res.status(201).json({message : "User created successfully !"}); // On repond au client via un res.json
 
 }
 
