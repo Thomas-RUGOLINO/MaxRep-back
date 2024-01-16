@@ -21,6 +21,9 @@ profileRouter.post("/profile/sport/:id", verify, profileController.addSportToUse
 // Remove Sport by user
 profileRouter.delete("/profile/sport/:id", verify, profileController.deleteSportUser);
 
+// get all categories including sports
+profileRouter.get("/categories", verify, profileController.getCategories);
+
 
 
 module.exports = profileRouter;

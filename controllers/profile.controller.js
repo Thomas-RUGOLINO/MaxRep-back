@@ -1,4 +1,4 @@
-const { User } = require("../models");
+const { User, Category, Sport } = require("../models");
 
 
 // Get User Profile data Endpoint Function by User ID
@@ -123,6 +123,17 @@ async function deleteSportUser (req, res) {
 
 }
 
+async function getCategories(req, res) {
+    const categories = await Category.findAll({
+        include: [{
+            model: Sport,
+            as: 'sports',
+        }],
+    });
+
+    res.status(200).json(categories);
+}
+
 
 
 module.exports = {
@@ -130,5 +141,6 @@ module.exports = {
     updateProfile,
     addSportToUser,
     deleteUser,
-    deleteSportUser
+    deleteSportUser,
+    getCategories
 };
