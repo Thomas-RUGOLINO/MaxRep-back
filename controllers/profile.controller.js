@@ -1,5 +1,8 @@
 const { User } = require("../models");
 
+
+// Get User Profile data Endpoint Function by User ID
+
 async function getProfile(req, res) {
     const { id } = req.params;
 
@@ -11,11 +14,13 @@ async function getProfile(req, res) {
     });
 
     if (!user) {
-        return res.status(404).json({ error: "User not found" });
+        return res.status(404).json({ error: "User not found/utilisateur non trouvé" });
     }
 
     res.status(200).json(user);
 }
+
+// Update User Profile Data Endpoint by User ID
 
 async function updateProfile(req, res) {
     const id  = parseInt(req.params.id);
@@ -52,6 +57,25 @@ async function updateProfile(req, res) {
     res.status(200).json(updatedUser);
 }
 
+// Delete a User Endpoint by User ID
+
+async function deleteUser(req, res) {
+    
+    const userId = parseInt(req.params.id);
+    
+    const user = await User.findByPk(userId);
+
+    if (!user) {
+        return res.status(401).json({ error: "User not found/utilisateur non trouvé" });
+    }
+
+    await user.destroy();
+
+    res.status(204).end();
+}
+
+// Link Between a User and a Sport EndPoint in profile Page By adding the corresponding row is user_has_sport table
+
 async function addSportToUser(req, res) {
     
     const id = parseInt(req.params.id);
@@ -66,13 +90,37 @@ async function addSportToUser(req, res) {
         // Utilisez la méthode addSport pour ajouter un sport à l'utilisateur
         await user.addSport(sport);
     
-        res.status(201).json({message : "Sport ajouté à la pratique de l'utilisateur"});
+        res.status(201).json({message : "Sport ajouté à l'utilisateur"});
     } 
     catch (error) {
         res.status(404).json({error: error});
     }
   
+}
+
+// Delete the link between a User and a Sport based on the Couple UserID, SportID in user_has_sport table
+
+async function deleteSportUser (req, res) {
+
+    const id = parseInt(req.params.id);
+    const sport = parseInt(req.body.sportId);
+    try {
+        const user = await User.findByPk(id);
     
+        if (!user) {
+            throw new Error('Utilisateur non trouvé');
+        }
+    
+        // Utilisez la méthode removeSport pour supprimer un sport à un utilisateur
+        await user.removeSport(sport);
+    
+        res.status(204).end();
+    } 
+    catch (error) {
+        res.status(404).json({error: error});
+    }
+
+
 }
 
 
@@ -80,5 +128,7 @@ async function addSportToUser(req, res) {
 module.exports = {
     getProfile,
     updateProfile,
-    addSportToUser
+    addSportToUser,
+    deleteUser,
+    deleteSportUser
 };
