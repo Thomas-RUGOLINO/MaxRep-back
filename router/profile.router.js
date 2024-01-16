@@ -22,7 +22,7 @@ profileRouter.post("/profile/sport/:id", verify, profileController.addSportToUse
 profileRouter.delete("/profile/sport/:id", verify, profileController.deleteSportUser);
 
 // get all categories including sports
-profileRouter.get("/profile/categories", verify, profileController.getCategories);
+profileRouter.get("/categories", verify, profileController.getCategories);
 
 
 
