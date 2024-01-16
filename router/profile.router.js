@@ -12,10 +12,15 @@ profileRouter.get("/profile/:id", verify, profileController.getProfile);
 // Update user's infos by ID
 profileRouter.patch("/profile/:id", verify, profileController.updateProfile);
 
+// Delete user by ID
+profileRouter.delete("/profile/:id", verify, profileController.deleteUser); 
+
 // Add Sport by user
 profileRouter.post("/profile/sport/:id", verify, profileController.addSportToUser);
 
-// Delete user by ID
-//profileRouter.delete("/profile/:id", profileController.deleteProfile); */
+// Remove Sport by user
+profileRouter.delete("/profile/sport/:id", verify, profileController.deleteSportUser);
+
+
 
 module.exports = profileRouter;
