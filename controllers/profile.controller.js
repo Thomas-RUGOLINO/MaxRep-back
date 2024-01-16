@@ -48,8 +48,8 @@ async function updateProfile(req, res) {
         gender: gender || user.gender,
         city: city || user.city,
         country: country || user.country,
-        weight: weight || user.weight,
-        height: height || user.height,
+        weight: parseInt(weight) || user.weight,
+        height: parseInt(height) || user.height,
         is_shared: isShared || user.is_shared,
         profile_picture: profilePicture || user.profile_picture,
     });
