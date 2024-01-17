@@ -24,7 +24,7 @@ async function getProfile(req, res) {
 
 async function updateProfile(req, res) {
     const id  = parseInt(req.params.id);
-    const { email, lastname, firstname, birthDate, gender, city, country, weight, height, is_shared, profilePicture} = req.body;
+    const { email, lastname, firstname, birth_date, gender, city, country, weight, height, is_shared, profile_picture} = req.body;
 
     // check lastname and firstname if they don't have a number in the field 
     if (/\d/.test(firstname) || /\d/.test(lastname)) {
@@ -44,14 +44,14 @@ async function updateProfile(req, res) {
         email: email || user.email,
         firstname: firstname || user.firstname,
         lastname: lastname || user.lastname,
-        birth_date: birthDate || user.birth_date,
+        birth_date: birth_date || user.birth_date,
         gender: gender || user.gender,
         city: city || user.city,
         country: country || user.country,
         weight: parseInt(weight) || user.weight,
         height: parseInt(height) || user.height,
-        is_shared: is_shared || user.is_shared,
-        profile_picture: profilePicture || user.profile_picture,
+        is_shared: Object.prototype.hasOwnProperty.call(req.body, 'is_shared') ? is_shared : user.is_shared,
+        profile_picture: profile_picture || user.profile_picture,
     });
     // Répondre au client
     res.status(200).json(updatedUser);
@@ -103,7 +103,7 @@ async function addSportToUser(req, res) {
 async function deleteSportUser (req, res) {
 
     const id = parseInt(req.params.id);
-    const sport = parseInt(req.body.sportId);
+    const sport = parseInt(req.params.sportId);
     try {
         const user = await User.findByPk(id);
     

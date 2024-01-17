@@ -19,7 +19,7 @@ profileRouter.delete("/profile/:id", verify, profileController.deleteUser);
 profileRouter.post("/profile/sport/:id", verify, profileController.addSportToUser);
 
 // Remove Sport by user
-profileRouter.delete("/profile/sport/:id", verify, profileController.deleteSportUser);
+profileRouter.delete("/profile/sport/:id/:sportId", verify, profileController.deleteSportUser);
 
 // get all categories including sports
 profileRouter.get("/categories", verify, profileController.getCategories);
