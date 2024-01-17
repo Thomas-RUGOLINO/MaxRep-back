@@ -103,7 +103,7 @@ async function addSportToUser(req, res) {
 async function deleteSportUser (req, res) {
 
     const id = parseInt(req.params.id);
-    const sport = parseInt(req.body.sportId);
+    const sport = parseInt(req.params.sportId);
     try {
         const user = await User.findByPk(id);
     
