@@ -50,7 +50,7 @@ async function updateProfile(req, res) {
         country: country || user.country,
         weight: parseInt(weight) || user.weight,
         height: parseInt(height) || user.height,
-        is_shared: is_shared || user.is_shared,
+        is_shared: Object.prototype.hasOwnProperty.call(req.body, 'is_shared') ? is_shared : user.is_shared,
         profile_picture: profilePicture || user.profile_picture,
     });
     // Répondre au client
