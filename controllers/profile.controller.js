@@ -24,7 +24,7 @@ async function getProfile(req, res) {
 
 async function updateProfile(req, res) {
     const id  = parseInt(req.params.id);
-    const { email, lastname, firstname, birthDate, gender, city, country, weight, height, isShared, profilePicture} = req.body;
+    const { email, lastname, firstname, birthDate, gender, city, country, weight, height, is_shared, profilePicture} = req.body;
 
     // check lastname and firstname if they don't have a number in the field 
     if (/\d/.test(firstname) || /\d/.test(lastname)) {
@@ -50,7 +50,7 @@ async function updateProfile(req, res) {
         country: country || user.country,
         weight: parseInt(weight) || user.weight,
         height: parseInt(height) || user.height,
-        is_shared: isShared || user.is_shared,
+        is_shared: is_shared || user.is_shared,
         profile_picture: profilePicture || user.profile_picture,
     });
     // Répondre au client
