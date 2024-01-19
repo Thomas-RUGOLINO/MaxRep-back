@@ -1,4 +1,4 @@
-const { User, Category, Sport } = require("../models");
+const { User, Category, Sport, Best_performance } = require("../models");
 
 
 // Get User Profile data Endpoint Function by User ID
@@ -80,6 +80,9 @@ async function addSportToUser(req, res) {
     
     const id = parseInt(req.params.id);
     const sport = parseInt(req.body.sportId);
+    // On récupère la date du jour au format ISO pour l'insérer au format YYYY-MM-DD dans best_performance lorsque l'utilisateur ajoute un sport
+    const currentDate = new Date();
+    const formattedDate = currentDate.toISOString().split('T')[0];
     try {
         const user = await User.findByPk(id);
     
@@ -89,6 +92,15 @@ async function addSportToUser(req, res) {
     
         // Utilisez la méthode addSport pour ajouter un sport à l'utilisateur
         await user.addSport(sport);
+        // Au moment où l'on crée un lien utilisateur <=> sport, on crée la ligne dans la table best_performance qui correspond à ce sport et cet utilisateur
+        await Best_performance.create({
+            user_id: id,
+            sport_id: sport,
+            best_score: 0,
+            date: formattedDate,
+        });
+
+        
     
         res.status(201).json({message : "Sport ajouté à l'utilisateur"});
     } 
