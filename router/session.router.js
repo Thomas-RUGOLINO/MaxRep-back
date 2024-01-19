@@ -11,8 +11,6 @@ sessionRouter.patch("/sessions/:sessionId", verify, sessionController.updateSess
 
 sessionRouter.get("/sessions/:id", verify, sessionController.getAllSessions);
 
-sessionRouter.patch("/score/:sessionId", verify, sessionController.updateScore);
-
 sessionRouter.delete("/sessions/:sessionId", verify, sessionController.deleteSession);
 
 
