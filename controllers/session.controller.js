@@ -46,6 +46,7 @@ async function addSession(req, res) {
 async function updateSession(req, res) {
     const sessionId = parseInt(req.params.sessionId);
     const { date, description, score, sport_id, user_id, unit } = req.body;
+    
 
     const session = await Session.findByPk(sessionId);
 
