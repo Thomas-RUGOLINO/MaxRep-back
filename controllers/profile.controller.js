@@ -96,7 +96,7 @@ async function addSportToUser(req, res) {
         await Best_performance.create({
             user_id: id,
             sport_id: sport,
-            score: 0,
+            best_score: 0,
             date: formattedDate,
         });
 
