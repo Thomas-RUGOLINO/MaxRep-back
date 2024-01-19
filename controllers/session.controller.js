@@ -5,13 +5,14 @@ async function getAllSessions(req, res) {
     const id = parseInt(req.params.id);
 
     const sessions = await User.findByPk(id, {
+        attributes: [ 'id' ],
         include: [
             {
                 association: 'sessions',
                 include: [{ 
                     model: Sport, 
                     as: 'sport', // Assurez-vous que cette association est correctement définie dans votre modèle
-                    attributes: ['name'] // Ici, 'name' est le champ que vous souhaitez récupérer de la table sport
+                    attributes: ['name', 'unit'] // Ici, 'name' est le champ que vous souhaitez récupérer de la table sport
                 }]
             },
             {
