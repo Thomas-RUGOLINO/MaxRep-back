@@ -1,4 +1,4 @@
-const { User, Sport, Session } = require('../models');
+const { User, Sport, Session, Best_performance } = require('../models');
 
 
 async function getAllSessions(req, res) {
@@ -45,7 +45,7 @@ async function addSession(req, res) {
 
 async function updateSession(req, res) {
     const sessionId = parseInt(req.params.sessionId);
-    const { date, description, score, sport_id, user_id } = req.body;
+    const { date, description, score, sport_id, user_id, unit } = req.body;
 
     const session = await Session.findByPk(sessionId);
 
@@ -61,22 +61,37 @@ async function updateSession(req, res) {
         user_id: user_id || session.user_id
     });
 
-    res.status(200).json(updatedSession);
-}
+    if (unit === "kg") {
+        const bestPerformance = await Best_performance.findOne({
+            where: {
+                user_id: user_id,
+                sport_id: sport_id
+            }
+        });
 
-async function updateScore(req, res) {
-    const sessionId = parseInt(req.params.sessionId);
-    const { score } = req.body;
+        if (bestPerformance && score > bestPerformance.best_score) {
+            // Mise à jour de la ligne dans la table best_performance
+            await bestPerformance.update({
+                best_score: score,
+                date: date
+            });
+        }
+    } else if (unit === "temps") {
+        const bestPerformance = await Best_performance.findOne({
+            where: {
+                user_id: user_id,
+                sport_id: sport_id
+            }
+        });
 
-    const session = await Session.findByPk(sessionId);
-
-    if (!session) {
-        return res.status(404).json({ error: "Session not found" });
+        if (bestPerformance && score < bestPerformance.best_score) {
+            // Mise à jour de la ligne dans la table best_performance
+            await bestPerformance.update({
+                best_score: score,
+                date: date
+            });
+        }
     }
-
-    const updatedSession = await session.update({
-        score: score || session.score
-    });
 
     res.status(200).json(updatedSession);
 }
@@ -100,6 +115,5 @@ module.exports = {
     getAllSessions,
     addSession,
     updateSession,
-    updateScore,
     deleteSession
 };
