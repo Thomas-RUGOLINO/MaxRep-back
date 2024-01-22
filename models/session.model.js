@@ -13,6 +13,7 @@ Session.init({
     },
     score: {
         type: DataTypes.INTEGER,
+        defaultValue: 0,
     },
 }, {
     sequelize,
