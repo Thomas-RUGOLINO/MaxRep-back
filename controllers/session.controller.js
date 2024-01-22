@@ -25,21 +25,22 @@ async function getAllSessions(req, res) {
     if (!sessions) {
         return res.status(404).json({ error: "Sessions not found for User !" });
     }
+    
     res.status(200).json(sessions);
 }
 
 async function addSession(req, res) {
     // const id = parseInt(req.params.id);
-    const { user_id, sport_id, date, description, score } = req.body;
+    const { user_id, sport_id, date, description } = req.body;
 
     const session = await Session.create({
         date,
         description,
-        score,
         sport_id,
         user_id
     });
-
+    
+    // Renvoie la réponse formatée
     res.status(201).json(session);
 }
 
@@ -58,7 +59,7 @@ async function updateSession(req, res) {
         date: date || session.date,
         description: description || session.description,
         score: score || session.score,
-        sport_id: sport_id || session.sport_id,
+        sport_id: parseInt(sport_id)|| session.sport_id,
         user_id: user_id || session.user_id
     });
 
@@ -93,7 +94,7 @@ async function updateSession(req, res) {
             });
         }
     }
-
+    
     res.status(200).json(updatedSession);
 }
 
