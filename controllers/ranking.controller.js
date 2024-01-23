@@ -5,7 +5,7 @@ async function getRanking(req, res) {
 
     const {sportId, gender, country, city, weightMin, weightMax} = req.query;
 
-    if (!weightMin || !weightMax) {
+    if ((weightMin && !weightMax )|| (!weightMin && weightMax)) {
         return res.status(404).json({ error: "You must specify a min weight and a max weight" });
     }
 
