@@ -33,13 +33,15 @@ async function getProfile(req, res) {
 async function updateProfile(req, res) {
     const id  = parseInt(req.params.id);
     const { email, lastname, firstname, birth_date, gender, city, country, weight, height, is_shared, profile_picture} = req.body;
+    const numweight = parseInt(weight);
+    const numheight = parseInt(height);
 
     // check lastname and firstname if they don't have a number in the field 
     if (/\d/.test(firstname) || /\d/.test(lastname)) {
         return res.status(400).json({ error: "Firstname and lastname must contain only letters! / Les noms et prénoms ne doivent contenir que des lettres" });
     }
     // check weight and height if they don't have a text in the field
-    if (/^\d+$/.test(weight) || /^\d+$/.test(height)) {
+    if (isNaN(numweight) || isNaN(numheight)) {
         return res.status(400).json({ error: "Height and weight must be numbers / La taille et le poids doivent être des chiffres !" });
     }
     
@@ -59,8 +61,8 @@ async function updateProfile(req, res) {
             gender: gender || user.gender,
             city: city || user.city,
             country: country || user.country,
-            weight: parseInt(weight) || user.weight,
-            height: parseInt(height) || user.height,
+            weight: numweight || user.weight,
+            height: numheight || user.height,
             is_shared: Object.prototype.hasOwnProperty.call(req.body, 'is_shared') ? is_shared : user.is_shared,
             profile_picture: profile_picture || user.profile_picture,
         });
