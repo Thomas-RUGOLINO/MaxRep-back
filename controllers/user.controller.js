@@ -8,7 +8,6 @@ async function getAllUsers(req, res) {
         include:['sessions',
             'best_performance',
             {association : 'sports', include : ['category']}
-    
         ]
 
     });
@@ -49,18 +48,24 @@ async function registerUser (req, res) {
 
     // == 3. Register the USER in the DB ==
 
+    try {
+        const createdUser = await User.create({ // On créé la liste en BDD via nos models
+            email,
+            password: hashPassword,
+            firstname,
+            lastname,
+            birth_date: birthDate,
+            gender,
+        });
+        console.log(createdUser);
+        // == 4. Réponse au client ==
+        res.status(201).json({message : "User created successfully !"}); // On repond au client via un res.json
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ error: "Server error / Please try again" });
+    }
     
-    const createdUser = await User.create({ // On créé la liste en BDD via nos models
-        email,
-        password: hashPassword,
-        firstname,
-        lastname,
-        birth_date: birthDate,
-        gender,
-    });
-    console.log(createdUser);
-    // == 4. Réponse au client ==
-    res.status(201).json({message : "User created successfully !"}); // On repond au client via un res.json
 
 }
 
@@ -79,24 +84,32 @@ async function loginUser(req, res) {
     }
 
     // 3 - == We check if the email used is bound to a registered user in the DB
-    const user = await User.findOne({ where: {email} });
+    try {
+        const user = await User.findOne({ where: {email} });
 
-    // If the user doesn"t exists we generate an error
-    if(!user){
+        // If the user doesn"t exists we generate an error
+        if(!user){
         // ! Attention : lorsque l'on doit renvoyer à l'utilisateur une erreur, spécifiant que soit son email soit son mot de passe est invalide, le message le plus flou possible. C'est à dire que l'on ne renverra pas "email invalide" ou "mot de passe incorrect", mais "authentification invalide". Le but étant de laissé le moins de pistes possible pour un potentiel pirate.
-        return res.status(400).json({ error: "Invalid Authentication check your credentials ! / Autenthification invalide vérifiez vos informations" });
-    } else {
-        // If the user exists we compare the database hashed password to the password sent in the POST's body
-        // comparer user.password (le mot de passe récupérer de la BDD) avec password (fourni par l'utilisateur dans le post)
-        const isPasswordValid = await bcrypt.compare(password, user.password);
-        if(!isPasswordValid){
             return res.status(400).json({ error: "Invalid Authentication check your credentials ! / Autenthification invalide vérifiez vos informations" });
+
+        } else {
+            // If the user exists we compare the database hashed password to the password sent in the POST's body
+            // comparer user.password (le mot de passe récupérer de la BDD) avec password (fourni par l'utilisateur dans le post)
+            const isPasswordValid = await bcrypt.compare(password, user.password);
+            if(!isPasswordValid){
+                return res.status(400).json({ error: "Invalid Authentication check your credentials ! / Autenthification invalide vérifiez vos informations" });
+            }
+            // If the password sent is valid we generate the token and send it with the server's response in the header
+            const token = jwt.sign({id : user.id, firstname : user.firstname, lastname : user.lastname}, process.env.SECRET);
+            res.header('auth-token', token);
+            return res.status(200).json(token);
         }
-        // If the password sent is valid we generate the token and send it with the server's response in the header
-        const token = jwt.sign({id : user.id, firstname : user.firstname, lastname : user.lastname}, process.env.SECRET);
-        res.header('auth-token', token);
-        return res.status(200).json(token);
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ error: "Server error / Please try again" });
     }
+    
 }
 
 

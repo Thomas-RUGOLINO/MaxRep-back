@@ -6,18 +6,26 @@ const { User, Category, Sport, Best_performance } = require("../models");
 async function getProfile(req, res) {
     const { id } = req.params;
 
-    const user = await User.findByPk(id, {
-        include:['sessions',
-            {association : 'sports', include : ['category']}
-        ]
+    try {
+        const user = await User.findByPk(id, {
+            include:['sessions',
+                {association : 'sports', include : ['category']}
+            ]
+    
+        });
+    
+        if (!user) {
+            return res.status(404).json({ error: "User not found/utilisateur non trouvé" });
+        }
+    
+        res.status(200).json(user);
 
-    });
-
-    if (!user) {
-        return res.status(404).json({ error: "User not found/utilisateur non trouvé" });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ error: "Server error / Please try again" });
     }
 
-    res.status(200).json(user);
+    
 }
 
 // Update User Profile Data Endpoint by User ID
@@ -31,30 +39,39 @@ async function updateProfile(req, res) {
         return res.status(400).json({ error: "Firstname and lastname must contain only letters! / Les noms et prénoms ne doivent contenir que des lettres" });
     }
     // check weight and height if they don't have a text in the field
-    if (/^\d+$/.test(weight) || /^\d+$/.test(height));
+    if (/^\d+$/.test(weight) || /^\d+$/.test(height)) {
+        return res.status(400).json({ error: "Height and weight must be numbers / La taille et le poids doivent être des chiffres !" });
+    }
     
     // Récupérer la liste pour l'update
-    const user = await User.findByPk(id);
+    try {
+        const user = await User.findByPk(id);
 
-    if (!user) {
-        return res.status(404).json({ error: "Requested user not found" });
-    }
+        if (!user) {
+            return res.status(404).json({ error: "Requested user not found" });
+        }
    
-    const updatedUser = await user.update({
-        email: email || user.email,
-        firstname: firstname || user.firstname,
-        lastname: lastname || user.lastname,
-        birth_date: birth_date || user.birth_date,
-        gender: gender || user.gender,
-        city: city || user.city,
-        country: country || user.country,
-        weight: parseInt(weight) || user.weight,
-        height: parseInt(height) || user.height,
-        is_shared: Object.prototype.hasOwnProperty.call(req.body, 'is_shared') ? is_shared : user.is_shared,
-        profile_picture: profile_picture || user.profile_picture,
-    });
-    // Répondre au client
-    res.status(200).json(updatedUser);
+        const updatedUser = await user.update({
+            email: email || user.email,
+            firstname: firstname || user.firstname,
+            lastname: lastname || user.lastname,
+            birth_date: birth_date || user.birth_date,
+            gender: gender || user.gender,
+            city: city || user.city,
+            country: country || user.country,
+            weight: parseInt(weight) || user.weight,
+            height: parseInt(height) || user.height,
+            is_shared: Object.prototype.hasOwnProperty.call(req.body, 'is_shared') ? is_shared : user.is_shared,
+            profile_picture: profile_picture || user.profile_picture,
+        });
+        // Répondre au client
+        res.status(200).json(updatedUser);
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ error: "Server error / Please try again" });
+    }
+    
 }
 
 // Delete a User Endpoint by User ID
@@ -62,16 +79,24 @@ async function updateProfile(req, res) {
 async function deleteUser(req, res) {
     
     const userId = parseInt(req.params.id);
-    
-    const user = await User.findByPk(userId);
 
-    if (!user) {
-        return res.status(401).json({ error: "User not found/utilisateur non trouvé" });
+    try {
+        const user = await User.findByPk(userId);
+
+        if (!user) {
+            return res.status(401).json({ error: "User not found/utilisateur non trouvé" });
+        }
+
+        await user.destroy();
+
+        res.status(204).end();
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ error: "Server error / Please try again" });
     }
-
-    await user.destroy();
-
-    res.status(204).end();
+    
+    
 }
 
 // Link Between a User and a Sport EndPoint in profile Page By adding the corresponding row is user_has_sport table
@@ -105,7 +130,8 @@ async function addSportToUser(req, res) {
         res.status(201).json({message : "Sport ajouté à l'utilisateur"});
     } 
     catch (error) {
-        res.status(404).json({error: error});
+        console.log(error);
+        return res.status(500).json({ error: "Server error / Please try again" });
     }
   
 }
@@ -116,6 +142,7 @@ async function deleteSportUser (req, res) {
 
     const id = parseInt(req.params.id);
     const sport = parseInt(req.params.sportId);
+
     try {
         const user = await User.findByPk(id);
     
@@ -128,22 +155,32 @@ async function deleteSportUser (req, res) {
     
         res.status(204).end();
     } 
+
     catch (error) {
-        res.status(404).json({error: error});
+        console.log(error);
+        return res.status(500).json({ error: "Server error / Please try again" });
     }
 
 
 }
 
 async function getCategories(req, res) {
-    const categories = await Category.findAll({
-        include: [{
-            model: Sport,
-            as: 'sports',
-        }],
-    });
 
-    res.status(200).json(categories);
+    try {
+        const categories = await Category.findAll({
+            include: [{
+                model: Sport,
+                as: 'sports',
+            }],
+        });
+    
+        res.status(200).json(categories);
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ error: "Server error / Please try again" });
+    }
+    
 }
 
 
