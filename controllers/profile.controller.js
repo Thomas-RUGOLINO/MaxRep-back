@@ -41,7 +41,7 @@ async function updateProfile(req, res) {
         return res.status(400).json({ error: "Firstname and lastname must contain only letters! / Les noms et prénoms ne doivent contenir que des lettres" });
     }
     // check weight and height if they don't have a text in the field
-    if (isNaN(numweight) || isNaN(numheight)) {
+    if (numweight && isNaN(numweight) || numheight && isNaN(numheight)) {
         return res.status(400).json({ error: "Height and weight must be numbers / La taille et le poids doivent être des chiffres !" });
     }
     
