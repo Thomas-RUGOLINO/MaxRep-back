@@ -64,7 +64,8 @@ CREATE TABLE "best_performance" (
     "user_id" integer NOT NULL REFERENCES "user"("id") ON DELETE CASCADE,
     "sport_id" integer NOT NULL REFERENCES "sport"("id") ON DELETE CASCADE,
     "created_at" timestamptz NOT NULL DEFAULT now(),
-    "updated_at" timestamptz
+    "updated_at" timestamptz,
+    UNIQUE ("user_id", "sport_id")
 );
 
 -- Create session_table

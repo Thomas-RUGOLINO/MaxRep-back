@@ -154,6 +154,14 @@ async function deleteSportUser (req, res) {
     
         // Utilisez la méthode removeSport pour supprimer un sport à un utilisateur
         await user.removeSport(sport);
+
+        // Delete the corresponding row in the best_performance table
+        await Best_performance.destroy({
+            where: {
+                user_id: id,
+                sport_id: sport,
+            },
+        });
     
         res.status(204).end();
     } 
