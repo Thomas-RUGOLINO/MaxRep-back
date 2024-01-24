@@ -120,12 +120,22 @@ async function addSportToUser(req, res) {
         // Utilisez la méthode addSport pour ajouter un sport à l'utilisateur
         await user.addSport(sport);
         // Au moment où l'on crée un lien utilisateur <=> sport, on crée la ligne dans la table best_performance qui correspond à ce sport et cet utilisateur
-        await Best_performance.create({
-            user_id: id,
-            sport_id: sport,
-            best_score: 0,
-            date: formattedDate,
+        const existingBestPerformance = await Best_performance.findOne({
+            where: {
+                user_id: id,
+                sport_id: sport,
+            },
+
         });
+        if (!existingBestPerformance) {
+            await Best_performance.create({
+                user_id: id,
+                sport_id: sport,
+                best_score: 0,
+                date: formattedDate,
+            });
+        }
+        
 
         
     
@@ -155,13 +165,7 @@ async function deleteSportUser (req, res) {
         // Utilisez la méthode removeSport pour supprimer un sport à un utilisateur
         await user.removeSport(sport);
 
-        // Delete the corresponding row in the best_performance table
-        await Best_performance.destroy({
-            where: {
-                user_id: id,
-                sport_id: sport,
-            },
-        });
+        
     
         res.status(204).end();
     } 
