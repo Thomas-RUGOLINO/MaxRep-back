@@ -99,8 +99,8 @@ async function updateSession(req, res) {
                     sport_id: sport_id
                 }
             });
-
-            if (bestPerformance && score < bestPerformance.best_score) {
+            
+            if (bestPerformance && (score < bestPerformance.best_score || bestPerformance.best_score === 0)) {
             // Mise à jour de la ligne dans la table best_performance
                 await bestPerformance.update({
                     best_score: score,
