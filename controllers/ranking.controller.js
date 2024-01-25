@@ -38,7 +38,7 @@ async function getRanking(req, res) {
                 {
                     model: Sport,
                     as: 'sport',
-                    attributes: ['id', 'name'],
+                    attributes: ['id', 'name', 'unit'],
                 },
             ],
         });
