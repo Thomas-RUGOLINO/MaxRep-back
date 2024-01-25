@@ -18,7 +18,6 @@ async function getAllSessions(req, res) {
                 },
                 {
                     association: 'sports',
-                    include: ['category']
                 }
             ]
         });
