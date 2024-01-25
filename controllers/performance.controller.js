@@ -5,6 +5,7 @@ async function getPerformances(req, res) {
     
     try {
         const performances = await User.findByPk(id, {
+            attributes: [ 'id' ],
             include: [
                 {
                     association: 'sports',

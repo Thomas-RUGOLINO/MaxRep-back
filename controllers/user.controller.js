@@ -3,17 +3,6 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { User } = require("../models");
 
-async function getAllUsers(req, res) {
-    const users = await User.findAll({
-        include:['sessions',
-            'best_performance',
-            {association : 'sports', include : ['category']}
-        ]
-
-    });
-
-    res.status(200).json(users);
-}
 
 async function registerUser (req, res) {
     // == 1. Data variables destructuration from the front Body REQUEST ==
@@ -114,7 +103,6 @@ async function loginUser(req, res) {
 
 
 module.exports = { 
-    getAllUsers,
     registerUser,
     loginUser    
 };
