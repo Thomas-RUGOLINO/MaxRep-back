@@ -30,7 +30,8 @@ async function getRanking(req, res) {
                                 weight: {
                                     [Op.between] : [weightMin , weightMax]
                                 }
-                            }
+                            },
+                            { is_shared: true }
                         ]
                     }
                 },
