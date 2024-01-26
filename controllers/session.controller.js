@@ -41,15 +41,31 @@ async function addSession(req, res) {
     const { user_id, sport_id, date, description } = req.body;
 
     try {
-        const session = await Session.create({
-            date,
-            description,
-            sport_id,
-            user_id
+        //verifier si une session portant la même date et le même sport existe déjà pour cet utilisateur
+        const existingSession = await Session.findOne({
+            where: {
+                date: date,
+                sport_id: sport_id,
+                user_id: user_id
+            }
         });
+        console.log(existingSession);
+        if (existingSession) { 
+
+            return res.status(400).json({ error: "You already have a session for this sport planned on this day !" });
+        }
+        else {
+            const session = await Session.create({
+                date,
+                description,
+                sport_id,
+                user_id
+            });
+            // Renvoie la réponse formatée
+            res.status(201).json(session);
+        }
         
-        // Renvoie la réponse formatée
-        res.status(201).json(session);
+        
         
     } catch (error) {
         console.log(error);
