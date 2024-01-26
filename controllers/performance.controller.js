@@ -19,14 +19,14 @@ async function getPerformances(req, res) {
         });
     
         if (!performances) {
-            return res.status(404).json({ error: "Performances not found for User !" });
+            return res.status(404).json({ error: "Aucune performance trouvée pour cette utilisateur" });
         }
     
         res.status(200).json(performances);
         
     } catch (error) {
         console.log(error);
-        return res.status(500).json({ error: "Server error / Please try again" });
+        return res.status(500).json({ error: "Erreur du serveur, veuillez réessayer s'il vous plait" });
     }
 
 }

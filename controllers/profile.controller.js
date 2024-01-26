@@ -15,14 +15,14 @@ async function getProfile(req, res) {
         });
     
         if (!user) {
-            return res.status(404).json({ error: "User not found/utilisateur non trouvé" });
+            return res.status(404).json({ error: "Utilisateur non trouvé" });
         }
     
         res.status(200).json(user);
 
     } catch (error) {
         console.log(error);
-        return res.status(500).json({ error: "Server error / Please try again" });
+        return res.status(500).json({ error: "Erreur du serveur, veuillez réessayer s'il vous plait" });
     }
 
     
@@ -38,19 +38,19 @@ async function updateProfile(req, res) {
 
     // check lastname and firstname if they don't have a number in the field 
     if (/\d/.test(firstname) || /\d/.test(lastname)) {
-        return res.status(400).json({ error: "Firstname and lastname must contain only letters! / Les noms et prénoms ne doivent contenir que des lettres" });
+        return res.status(400).json({ error: " Les noms et prénoms ne doivent contenir que des lettres" });
     }
     // check weight and height if they don't have a text in the field
     if (numweight && isNaN(numweight) || numheight && isNaN(numheight)) {
-        return res.status(400).json({ error: "Height and weight must be numbers / La taille et le poids doivent être des chiffres !" });
+        return res.status(400).json({ error: "La taille et le poids doivent être des chiffres !" });
     }
     
-    // Récupérer la liste pour l'update
+    // Récupérer le User pour l'update
     try {
         const user = await User.findByPk(id);
 
         if (!user) {
-            return res.status(404).json({ error: "Requested user not found" });
+            return res.status(404).json({ error: "Utilisateur spécifié introuvable" });
         }
    
         const updatedUser = await user.update({
@@ -71,7 +71,7 @@ async function updateProfile(req, res) {
 
     } catch (error) {
         console.log(error);
-        return res.status(500).json({ error: "Server error / Please try again" });
+        return res.status(500).json({ error: "Erreur du serveur, veuillez réessayer s'il vous plait" });
     }
     
 }
@@ -86,7 +86,7 @@ async function deleteUser(req, res) {
         const user = await User.findByPk(userId);
 
         if (!user) {
-            return res.status(401).json({ error: "User not found/utilisateur non trouvé" });
+            return res.status(401).json({ error: "Utilisateur non trouvé" });
         }
 
         await user.destroy();
@@ -95,7 +95,7 @@ async function deleteUser(req, res) {
 
     } catch (error) {
         console.log(error);
-        return res.status(500).json({ error: "Server error / Please try again" });
+        return res.status(500).json({ error: "Erreur du serveur, veuillez réessayer s'il vous plait" });
     }
     
     
@@ -143,7 +143,7 @@ async function addSportToUser(req, res) {
     } 
     catch (error) {
         console.log(error);
-        return res.status(500).json({ error: "Server error / Please try again" });
+        return res.status(500).json({ error: "Erreur du serveur, veuillez réessayer s'il vous plait" });
     }
   
 }
@@ -172,7 +172,7 @@ async function deleteSportUser (req, res) {
 
     catch (error) {
         console.log(error);
-        return res.status(500).json({ error: "Server error / Please try again" });
+        return res.status(500).json({ error: "Erreur du serveur, veuillez réessayer s'il vous plait" });
     }
 
 
@@ -192,7 +192,7 @@ async function getCategories(req, res) {
 
     } catch (error) {
         console.log(error);
-        return res.status(500).json({ error: "Server error / Please try again" });
+        return res.status(500).json({ error: "Erreur du serveur, veuillez réessayer s'il vous plait" });
     }
     
 }

@@ -23,14 +23,14 @@ async function getAllSessions(req, res) {
         });
     
         if (!sessions) {
-            return res.status(404).json({ error: "Sessions not found for User !" });
+            return res.status(404).json({ error: "Aucun entrainements trouvés pour cet utilisateur" });
         }
         
         res.status(200).json(sessions);
 
     } catch (error) {
         console.log(error);
-        return res.status(500).json({ error: "Server error / Please try again" });
+        return res.status(500).json({ error: "Erreur du serveur, veuillez réessayer s'il vous plait" });
     }
 
     
@@ -52,7 +52,7 @@ async function addSession(req, res) {
         console.log(existingSession);
         if (existingSession) { 
 
-            return res.status(400).json({ error: "You already have a session for this sport planned on this day !" });
+            return res.status(400).json({ error: "Vous avez déjà programmé une session pour ce sport sur cette date" });
         }
         else {
             const session = await Session.create({
@@ -69,7 +69,7 @@ async function addSession(req, res) {
         
     } catch (error) {
         console.log(error);
-        return res.status(500).json({ error: "Server error / Please try again" });
+        return res.status(500).json({ error: "Erreur du serveur, veuillez réessayer s'il vous plait" });
     }
 }
 
@@ -81,7 +81,7 @@ async function updateSession(req, res) {
         const session = await Session.findByPk(sessionId);
 
         if (!session) {
-            return res.status(404).json({ error: "Session not found" });
+            return res.status(404).json({ error: "Entrainement non trouvé" });
         }
 
         const updatedSession = await session.update({
@@ -128,7 +128,7 @@ async function updateSession(req, res) {
 
     } catch (error) {
         console.log(error);
-        return res.status(500).json({ error: "Server error / Please try again" });
+        return res.status(500).json({ error: "Erreur du serveur, veuillez réessayer s'il vous plait" });
     }
 
     
@@ -141,7 +141,7 @@ async function deleteSession(req, res) {
         const session = await Session.findByPk(sessionId);
 
         if (!session) {
-            return res.status(404).json({ error: "Session not found" });
+            return res.status(404).json({ error: "Entrainement non trouvé" });
         }
     
         await session.destroy();
@@ -150,7 +150,7 @@ async function deleteSession(req, res) {
 
     } catch (error) {
         console.log(error);
-        return res.status(500).json({ error: "Server error / Please try again" });
+        return res.status(500).json({ error: "Erreur du serveur, veuillez réessayer s'il vous plait" });
     }
 
 }

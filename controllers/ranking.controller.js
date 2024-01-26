@@ -6,7 +6,7 @@ async function getRanking(req, res) {
     const {sportId, gender, country, city, weightMin, weightMax} = req.query;
 
     if ((weightMin && !weightMax )|| (!weightMin && weightMax)) {
-        return res.status(404).json({ error: "You must specify a min weight and a max weight" });
+        return res.status(404).json({ error: "Vous devez spécifier un poids minimum et un poids maximum" });
     }
 
     try {
@@ -47,7 +47,7 @@ async function getRanking(req, res) {
         
     } catch (error) {
         console.log(error);
-        return res.status(500).json({ error: "Server error / Please try again" });
+        return res.status(500).json({ error: "Erreur du serveur, veuillez réessayer s'il vous plait" });
     }
 }
 
