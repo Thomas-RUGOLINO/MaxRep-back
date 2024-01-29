@@ -38,7 +38,7 @@ async function getAllSessions(req, res) {
 
 async function addSession(req, res) {
     // const id = parseInt(req.params.id);
-    const { user_id, sport_id, date, description } = req.body;
+    const { user_id, sport_id, date, description, score } = req.body;
 
     try {
         //verifier si une session portant la même date et le même sport existe déjà pour cet utilisateur
@@ -57,6 +57,7 @@ async function addSession(req, res) {
         else {
             const session = await Session.create({
                 date,
+                score,
                 description,
                 sport_id,
                 user_id
