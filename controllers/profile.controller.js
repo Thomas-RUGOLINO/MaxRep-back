@@ -125,22 +125,22 @@ async function addSportToUser(req, res) {
                 user_id: id,
                 sport_id: sport,
             },
-
         });
-        if (!existingBestPerformance) {
-            await Best_performance.create({
-                user_id: id,
-                sport_id: sport,
-                best_score: 0,
-                date: formattedDate,
-            });
-        }
-        
 
-        
-    
+        if (existingBestPerformance) {
+            return res.status(401).json({ error: "Vous suivez déjà ce sport." });
+        }
+
+        await Best_performance.create({
+            user_id: id,
+            sport_id: sport,
+            best_score: 0,
+            date: formattedDate,
+        });
+
         res.status(201).json({message : "Sport ajouté à l'utilisateur"});
     } 
+
     catch (error) {
         console.log(error);
         return res.status(500).json({ error: "Server error / Please try again" });
@@ -165,8 +165,6 @@ async function deleteSportUser (req, res) {
         // Utilisez la méthode removeSport pour supprimer un sport à un utilisateur
         await user.removeSport(sport);
 
-        
-    
         res.status(204).end();
     } 
 
