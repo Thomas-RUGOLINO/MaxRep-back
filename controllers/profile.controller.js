@@ -127,16 +127,16 @@ async function addSportToUser(req, res) {
             },
         });
 
-        if (existingBestPerformance) {
-            return res.status(401).json({ error: "Vous suivez déjà ce sport." });
+        if (!existingBestPerformance) {
+            await Best_performance.create({
+                user_id: id,
+                sport_id: sport,
+                best_score: 0,
+                date: formattedDate,
+            });
         }
 
-        await Best_performance.create({
-            user_id: id,
-            sport_id: sport,
-            best_score: 0,
-            date: formattedDate,
-        });
+        
 
         res.status(201).json({message : "Sport ajouté à l'utilisateur"});
     } 
