@@ -17,7 +17,7 @@ router.use(performanceRouter);
 router.use(rankingRouter);
 
 router.use((req, res) => {
-    res.status(404).json({ error : "Not found"});
+    res.status(404).json({ error : "Ressource non trouvée !"});
 });
 
 module.exports = router;
