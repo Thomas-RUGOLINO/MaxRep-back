@@ -22,8 +22,8 @@ async function getPerformances(req, res) {
         if (!performances) {
             return res.status(404).json({ error: "Aucune performance trouvée pour cet utilisateur" });
         }
-        /* const sortedPerformances = performances.sports.sort((a, b) => a.id - b.id); */
-        res.status(200).json(performances);
+        const sortedPerformances = performances.sports.sort((a, b) => a.id - b.id); 
+        res.status(200).json(sortedPerformances);
         
     } catch (error) {
         console.log(error);
