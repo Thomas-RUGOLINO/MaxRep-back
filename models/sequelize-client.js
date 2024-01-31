@@ -1,3 +1,5 @@
+// Desc: Sequelize client for connecting to the database
+//we import dotenv and call config() to load the environment variables from .env file
 require("dotenv").config();
 
 const { Sequelize } = require('sequelize');

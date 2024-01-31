@@ -24,8 +24,6 @@ async function getProfile(req, res) {
         console.log(error);
         return res.status(500).json({ error: "Erreur du serveur, veuillez réessayer s'il vous plait" });
     }
-
-    
 }
 
 // Update User Profile Data Endpoint by User ID
@@ -45,7 +43,7 @@ async function updateProfile(req, res) {
         return res.status(400).json({ error: "La taille et le poids doivent être des chiffres !" });
     }
     
-    // Récupérer le User pour l'update
+    // We find the User by his ID to update his data
     try {
         const user = await User.findByPk(id);
 
@@ -66,14 +64,13 @@ async function updateProfile(req, res) {
             is_shared: Object.prototype.hasOwnProperty.call(req.body, 'is_shared') ? is_shared : user.is_shared,
             profile_picture: profile_picture || user.profile_picture,
         });
-        // Répondre au client
+     
         res.status(200).json(updatedUser);
 
     } catch (error) {
         console.log(error);
         return res.status(500).json({ error: "Erreur du serveur, veuillez réessayer s'il vous plait" });
-    }
-    
+    }  
 }
 
 // Delete a User Endpoint by User ID
@@ -96,9 +93,7 @@ async function deleteUser(req, res) {
     } catch (error) {
         console.log(error);
         return res.status(500).json({ error: "Erreur du serveur, veuillez réessayer s'il vous plait" });
-    }
-    
-    
+    } 
 }
 
 // Link Between a User and a Sport EndPoint in profile Page By adding the corresponding row is user_has_sport table
@@ -107,7 +102,7 @@ async function addSportToUser(req, res) {
     
     const id = parseInt(req.params.id);
     const sport = parseInt(req.body.sportId);
-    // On récupère la date du jour au format ISO pour l'insérer au format YYYY-MM-DD dans best_performance lorsque l'utilisateur ajoute un sport
+    // Date format for best_performance table
     const currentDate = new Date();
     const formattedDate = currentDate.toISOString().split('T')[0];
     try {
@@ -117,16 +112,15 @@ async function addSportToUser(req, res) {
             throw new Error('Utilisateur non trouvé');
         }
     
-        // Utilisez la méthode addSport pour ajouter un sport à l'utilisateur
         await user.addSport(sport);
-        // Au moment où l'on crée un lien utilisateur <=> sport, on crée la ligne dans la table best_performance qui correspond à ce sport et cet utilisateur
+        // When user adds a sport, we check if there is already a row in best_performance table for this user and this sport
         const existingBestPerformance = await Best_performance.findOne({
             where: {
                 user_id: id,
                 sport_id: sport,
             },
         });
-
+        // If there is no row, we create one with the default best_score = 0
         if (!existingBestPerformance) {
             await Best_performance.create({
                 user_id: id,
@@ -135,9 +129,6 @@ async function addSportToUser(req, res) {
                 date: formattedDate,
             });
         }
-
-        
-
         res.status(201).json({message : "Sport ajouté à l'utilisateur"});
     } 
 
@@ -145,7 +136,6 @@ async function addSportToUser(req, res) {
         console.log(error);
         return res.status(500).json({ error: "Erreur du serveur, veuillez réessayer s'il vous plait" });
     }
-  
 }
 
 // Delete the link between a User and a Sport based on the Couple UserID, SportID in user_has_sport table
@@ -162,7 +152,6 @@ async function deleteSportUser (req, res) {
             throw new Error('Utilisateur non trouvé');
         }
     
-        // Utilisez la méthode removeSport pour supprimer un sport à un utilisateur
         await user.removeSport(sport);
 
         res.status(204).end();
@@ -172,8 +161,6 @@ async function deleteSportUser (req, res) {
         console.log(error);
         return res.status(500).json({ error: "Erreur du serveur, veuillez réessayer s'il vous plait" });
     }
-
-
 }
 
 async function getCategories(req, res) {
@@ -192,10 +179,7 @@ async function getCategories(req, res) {
         console.log(error);
         return res.status(500).json({ error: "Erreur du serveur, veuillez réessayer s'il vous plait" });
     }
-    
 }
-
-
 
 module.exports = {
     getProfile,

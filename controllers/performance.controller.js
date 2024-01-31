@@ -1,5 +1,7 @@
 const { User, Session, Sport } = require('../models');
 
+
+//Get all performances for a user Endpoint controller
 async function getPerformances(req, res) {
     const id = parseInt(req.params.id);
     
@@ -11,11 +13,11 @@ async function getPerformances(req, res) {
                     association: 'sports',
                     include: [{ 
                         model: Session, 
-                        as: 'sessions', // Assurez-vous que cette association est correctement définie dans votre modèle
+                        as: 'sessions', 
                         where: { user_id: id },
-                        order: [['id', 'ASC']] // Tri par l'id du sport en ordre croissant
+                        order: [['id', 'ASC']] 
                     }],
-                    order: [[Sport, 'id', 'ASC']] // Tri par l'id du sport en ordre croissant
+                    order: [[Sport, 'id', 'ASC']] 
                 }
             ]
         });
@@ -23,7 +25,7 @@ async function getPerformances(req, res) {
         if (!performances) {
             return res.status(404).json({ error: "Aucune performance trouvée pour cet utilisateur" });
         }
-        // Triez les sports tout en conservant la structure d'origine
+        // We sort the sports by id and keep the original structure of the object
         const sortedSports = performances.sports.sort((a, b) => a.id - b.id);
         const sortedUser = {
             id: performances.id,

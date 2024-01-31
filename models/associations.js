@@ -5,13 +5,6 @@ const Category = require('./category.model');
 const Session = require('./session.model');
 const Best_performance = require('./best_performance.model');
 
-
-// How to bind Models ? 
-
-// One-To-One
-// One-To-Many : hasMany + BelongsTo
-// Many-To-Many : belongsToMany + belongsToMany
-
 // Category <--------> Sport (One-to-Many)
 
 Category.hasMany(Sport,{

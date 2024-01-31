@@ -1,5 +1,6 @@
 const { Router } = require("express");
 const profileController = require("../controllers/profile.controller");
+//Importing the verify middleware to check the Token Validity
 const verify = require("../middleware/verify");
 
 const profileRouter = Router();
