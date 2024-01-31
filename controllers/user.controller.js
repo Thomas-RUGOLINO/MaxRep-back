@@ -44,6 +44,7 @@ async function registerUser (req, res) {
             lastname,
             birth_date: birthDate,
             gender,
+            is_shared: false,
             profile_picture: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/User-avatar.svg/768px-User-avatar.svg.png",
         });
         console.log(createdUser.firstname);
