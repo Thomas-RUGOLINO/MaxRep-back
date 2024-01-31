@@ -1,28 +1,28 @@
 const jwt = require('jsonwebtoken');
 
 const verify = (req, res, next) => {
-    // Récupère la valeur de l'en-tête 'Authorization'
+    // We get the token from the header if present
     const authHeader = req.header("Authorization");
 
-    // Vérifie si l'en-tête 'Authorization' est présent
+    // We verify if the token is present
     if (!authHeader) {
-        return res.status(401).json({error : "Unauthorized Access / Vous n'avez pas les droits d'accès à cette ressource"});
+        return res.status(401).json({error : "Vous n'avez pas les droits d'accès à cette ressource"});
     }
 
     try {
-        // Sépare la chaîne 'Bearer YOUR_TOKEN' pour obtenir le token
+        // We split the token to get only the token part
         const token = authHeader.split(' ')[1];
 
-        // Vérifie le token
+        // Token verification based on the secret key
         const verified = jwt.verify(token, process.env.SECRET);
 
-        // Attache les informations utilisateur à l'objet de la requête
+        // We bind the user to the request
         req.user = verified;
 
-        // Appelle le middleware suivant
+        // we call the next middleware if everything is ok
         next();
     } catch (err) {
-        res.status(401).json({ error: "Unauthorized Access / Vous n'avez pas les droits d'accès à cette ressource" });
+        res.status(401).json({ error: "Vous n'avez pas les droits d'accès à cette ressource" });
     }
 };
 

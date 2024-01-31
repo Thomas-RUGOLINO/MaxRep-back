@@ -13,7 +13,7 @@ async function registerUser (req, res) {
 
         return res.status(400).json({ error: "Tous les champs sont obligatoires !" });  
     }
-
+    // We verify if the email format is valid with the email-validator package
     if(!emailValidator.validate(email)){
         return res.status(400).json({ error: "Email invalide !" });
     }
@@ -25,20 +25,19 @@ async function registerUser (req, res) {
         return res.status(400).json({ error: "L'Email existe déjà !" });
     }
 
+    //We verify if the password and the passwordConfirm are the same
     if(passwordConfirm !== password){
         return res.status(400).json({ error:"Les mots de passe ne correspondent pas !" });
     }
 
-    
-    // encrypt the password
+    // We encrypt the password
     const salt = await bcrypt.genSalt(10); // salt add a unique value to the password to increase the encryption
     const hashPassword = await bcrypt.hash(req.body.password, salt); // hash the passord of the user, adding the salt
-
 
     // == 3. Register the USER in the DB ==
 
     try {
-        const createdUser = await User.create({ // On créé la liste en BDD via nos models
+        const createdUser = await User.create({ 
             email,
             password: hashPassword,
             firstname,
@@ -47,9 +46,9 @@ async function registerUser (req, res) {
             gender,
             profile_picture: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/User-avatar.svg/768px-User-avatar.svg.png",
         });
-        console.log(createdUser);
+        console.log(createdUser.firstname);
         // == 4. Réponse au client ==
-        res.status(201).json({message : "Utilisateur crée avec succès"}); // On repond au client via un res.json
+        res.status(201).json({message : "Utilisateur crée avec succès"}); // We send a 201 status code to the client to confirm the creation of the user
 
     } catch (error) {
         console.log(error);
@@ -79,12 +78,10 @@ async function loginUser(req, res) {
 
         // If the user doesn"t exists we generate an error
         if(!user){
-        // ! Attention : lorsque l'on doit renvoyer à l'utilisateur une erreur, spécifiant que soit son email soit son mot de passe est invalide, le message le plus flou possible. C'est à dire que l'on ne renverra pas "email invalide" ou "mot de passe incorrect", mais "authentification invalide". Le but étant de laissé le moins de pistes possible pour un potentiel pirate.
             return res.status(400).json({ error: "Autenthification invalide vérifiez vos informations" });
 
         } else {
             // If the user exists we compare the database hashed password to the password sent in the POST's body
-            // comparer user.password (le mot de passe récupérer de la BDD) avec password (fourni par l'utilisateur dans le post)
             const isPasswordValid = await bcrypt.compare(password, user.password);
             if(!isPasswordValid){
                 return res.status(400).json({ error: "Autenthification invalide vérifiez vos informations" });

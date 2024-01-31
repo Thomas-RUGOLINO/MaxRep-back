@@ -1,6 +1,6 @@
 const { User, Sport, Session, Best_performance } = require('../models');
 
-
+// Get all sessions for a user controller
 async function getAllSessions(req, res) {
     const id = parseInt(req.params.id);
 
@@ -12,8 +12,8 @@ async function getAllSessions(req, res) {
                     association: 'sessions',
                     include: [{ 
                         model: Sport, 
-                        as: 'sport', // Assurez-vous que cette association est correctement définie dans votre modèle
-                        attributes: ['name', 'unit'] // Ici, 'name' est le champ que vous souhaitez récupérer de la table sport
+                        as: 'sport', 
+                        attributes: ['name', 'unit'] 
                     }]
                 },
                 {
@@ -32,16 +32,14 @@ async function getAllSessions(req, res) {
         console.log(error);
         return res.status(500).json({ error: "Erreur du serveur, veuillez réessayer s'il vous plait" });
     }
-
-    
 }
 
 async function addSession(req, res) {
-    // const id = parseInt(req.params.id);
+    
     const { user_id, sport_id, date, description, score } = req.body;
 
     try {
-        //verifier si une session portant la même date et le même sport existe déjà pour cet utilisateur
+        //we verify if the user has already a session for this sport on this date
         const existingSession = await Session.findOne({
             where: {
                 date: date,
@@ -49,12 +47,13 @@ async function addSession(req, res) {
                 user_id: user_id
             }
         });
-        console.log(existingSession);
+        
         if (existingSession) { 
 
             return res.status(400).json({ error: "Vous avez déjà programmé une session pour ce sport sur cette date" });
         }
         else {
+            // We create the session if it doesn't exist
             const session = await Session.create({
                 date,
                 score,
@@ -62,18 +61,16 @@ async function addSession(req, res) {
                 sport_id,
                 user_id
             });
-            // Renvoie la réponse formatée
             res.status(201).json(session);
-        }
-        
-        
-        
+        }   
     } catch (error) {
         console.log(error);
         return res.status(500).json({ error: "Erreur du serveur, veuillez réessayer s'il vous plait" });
     }
 }
 
+
+// Update a session Endpoint controller
 async function updateSession(req, res) {
     const sessionId = parseInt(req.params.sessionId);
     const { date, description, score, sport_id, user_id, unit } = req.body;
@@ -92,7 +89,7 @@ async function updateSession(req, res) {
             sport_id: parseInt(sport_id)|| session.sport_id,
             user_id: user_id || session.user_id
         });
-
+        //Depending on the unit of the sport, we update the best performance of the user based on the score value
         if (unit === "kg") {
             const bestPerformance = await Best_performance.findOne({
                 where: {
@@ -102,7 +99,6 @@ async function updateSession(req, res) {
             });
 
             if (bestPerformance && score > bestPerformance.best_score) {
-            // Mise à jour de la ligne dans la table best_performance
                 await bestPerformance.update({
                     best_score: score,
                     date: date
@@ -117,7 +113,6 @@ async function updateSession(req, res) {
             });
             
             if (bestPerformance && (score < bestPerformance.best_score || bestPerformance.best_score === 0)) {
-            // Mise à jour de la ligne dans la table best_performance
                 await bestPerformance.update({
                     best_score: score,
                     date: date
@@ -131,10 +126,9 @@ async function updateSession(req, res) {
         console.log(error);
         return res.status(500).json({ error: "Erreur du serveur, veuillez réessayer s'il vous plait" });
     }
-
-    
 }
 
+// Delete a session Endpoint controller
 async function deleteSession(req, res) {
     const sessionId = parseInt(req.params.sessionId);
 
@@ -153,7 +147,6 @@ async function deleteSession(req, res) {
         console.log(error);
         return res.status(500).json({ error: "Erreur du serveur, veuillez réessayer s'il vous plait" });
     }
-
 }
 
 module.exports = {

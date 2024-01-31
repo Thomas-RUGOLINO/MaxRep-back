@@ -1,6 +1,8 @@
 const {Op} = require('sequelize');
 const { User, Sport, Best_performance } = require('../models');
 
+
+// Get ranking Endpoint controller
 async function getRanking(req, res) {
 
     const {sportId, gender, country, city, weightMin, weightMax} = req.query;
@@ -18,6 +20,7 @@ async function getRanking(req, res) {
             },
             include: [
                 {
+                    // We include the user model to get the user data and we add filters to the query, if the user has chosen to share his data
                     model: User,
                     as: 'user',
                     attributes: ['id', 'firstname', 'lastname', 'gender', 'country', 'city', 'weight'],
