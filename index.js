@@ -13,7 +13,7 @@ const app = express();
 // Table containing the allowed origins
 const allowedOrigins = [
     "http://localhost:5173",
-    "https://projet-01-maxrep-front.vercel.app/",
+    "https://projet-01-maxrep-front.vercel.app",
 ];
 
 const corsOptions = {
